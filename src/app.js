@@ -1,9 +1,6 @@
 const express = require("express");
-
 const { auth } = require("express-oauth2-jwt-bearer");
 const errorHandler = require("./middlewares/errorHandler");
-
-
 require('dotenv').config();
 
 // Configuracion Middleware con el Servidor de Autorización 
@@ -13,15 +10,18 @@ const autenticacion = auth({
   tokenSigningAlg: "RS256",
 });
 
-
 const app = express();
 app.use(express.json());
 
-// Importamos el Router de Libros
+// Importamos los Routers de Libros y Clientes
 const librosRouter = require("./routes/libros");
+const clientesRouter = require("./routes/clientes");
 
-//Configuramos el middleware de autenticacion
-app.use("/api/libros", autenticacion,  librosRouter);
+// Configuramos el middleware de autenticacion para las rutas de libros
+app.use("/api/libros", autenticacion, librosRouter);
+
+// Configuramos el middleware de autenticacion para las rutas de clientes
+app.use("/api/clientes", autenticacion, clientesRouter); //modificar la auth de token para poder hacer cambios en postman
 
 app.use(errorHandler);
 
